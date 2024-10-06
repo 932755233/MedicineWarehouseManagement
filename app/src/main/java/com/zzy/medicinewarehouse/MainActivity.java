@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.xutils.DbManager;
+import org.xutils.db.Selector;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
@@ -32,13 +33,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
     private List<Medicine> dataList = null;
     private RecyclerViewAdapter adapter;
 
     private int sortType = 0;
+    private boolean isDesc = false;
 
     @Override
     protected void onResume() {
@@ -98,30 +99,60 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.normal_sort) {
+            if (sortType!=0){
+                isDesc = false;
+            }else {
+                isDesc = !isDesc;
+            }
+            sortType = 0;
+            getData();
+            return true;
+        }
+        if (id == R.id.date_sort) {
+            if (sortType!=1){
+                isDesc = false;
+            }else {
+                isDesc = !isDesc;
+            }
+            sortType = 1;
+            getData();
+            return true;
+        }
+        if (id == R.id.name_sort) {
+            if (sortType!=2){
+                isDesc = false;
+            }else {
+                isDesc = !isDesc;
+            }
+            sortType = 2;
+            getData();
+            return true;
+        }
+        if (id == R.id.save_get_list) {
+            return true;
+        }
         if (id == R.id.action_settings) {
-            return true;
-        } if (id == R.id.action_settings) {
-            return true;
-        } if (id == R.id.action_settings) {
-            return true;
-        } if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
-
     public void getData() {
         try {
             DbManager db = x.getDb(BaseApplication.daoConfig);
-            List<Medicine> medicineList = db.selector(Medicine.class).findAll();
+
+            Selector<Medicine> selector = db.selector(Medicine.class);
+            if (sortType == 0)
+                selector.orderBy("id", isDesc);
+            if (sortType == 1)
+                selector.orderBy("inventory", isDesc);
+            if (sortType == 2)
+                selector.orderBy("abbreviation", isDesc);
+
+            List<Medicine> medicineList = selector.findAll();
+
             if (medicineList != null) {
                 dataList.clear();
                 dataList.addAll(medicineList);
