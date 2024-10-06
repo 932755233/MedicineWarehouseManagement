@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zzy.medicinewarehouse.base.BaseApplication;
+import com.zzy.medicinewarehouse.bean.AccessRecord;
 import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.AddMedicineBinding;
 import com.zzy.medicinewarehouse.utils.DateTimeUtil;
@@ -152,9 +153,12 @@ public class AddMedicineActivity extends AppCompatActivity {
             try {
                 String tempTip = "新增成功";
                 Medicine medicine = new Medicine();
+
                 if (idTemp != -1) {
                     medicine.setId(idTemp);
                     tempTip = "保存成功";
+                } else {
+                    medicine.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
                 }
                 medicine.setName(binding.etName.getText().toString().trim());
                 medicine.setAbbreviation(binding.etAbbreviation.getText().toString().trim());
@@ -171,10 +175,31 @@ public class AddMedicineActivity extends AppCompatActivity {
                         ), binding.spnAlarmUnit.getSelectedItemPosition()
                 ));
 
-                medicine.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
 
                 DbManager db = x.getDb(BaseApplication.daoConfig);
-                db.saveOrUpdate(medicine);
+                if (idTemp != -1) {
+                    db.update(medicine);
+                } else {
+                    db.saveBindingId(medicine);
+                }
+
+                AccessRecord accessRecord = new AccessRecord();
+                accessRecord.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
+                accessRecord.setBefore(inventoryTemp);
+                accessRecord.setAdd(UnitUtil.getNumberOfUnit(
+                        Long.parseLong(
+                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        ), binding.spnUnit.getSelectedItemPosition()));
+                accessRecord.setAfter(inventoryTemp + UnitUtil.getNumberOfUnit(
+                        Long.parseLong(
+                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        ), binding.spnUnit.getSelectedItemPosition()
+                ));
+                accessRecord.setMedicineName(medicine.getName());
+                accessRecord.setMedicineId(medicine.getId());
+                accessRecord.setType(1);
+                db.save(accessRecord);
+
 
                 boolean checked = binding.cbIsContinuous.isChecked();
                 if (checked) {

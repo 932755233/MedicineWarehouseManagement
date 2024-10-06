@@ -100,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.normal_sort) {
-            if (sortType!=0){
+            if (sortType != 0) {
                 isDesc = false;
-            }else {
+            } else {
                 isDesc = !isDesc;
             }
             sortType = 0;
@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.date_sort) {
-            if (sortType!=1){
+            if (sortType != 1) {
                 isDesc = false;
-            }else {
+            } else {
                 isDesc = !isDesc;
             }
             sortType = 1;
@@ -120,9 +120,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.name_sort) {
-            if (sortType!=2){
+            if (sortType != 2) {
                 isDesc = false;
-            }else {
+            } else {
                 isDesc = !isDesc;
             }
             sortType = 2;
@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.save_get_list) {
+            startActivity(new Intent(MainActivity.this, AccessRecordListActivity.class));
             return true;
         }
         if (id == R.id.action_settings) {
