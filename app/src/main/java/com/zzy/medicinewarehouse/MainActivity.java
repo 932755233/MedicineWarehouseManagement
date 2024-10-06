@@ -13,16 +13,38 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.zzy.medicinewarehouse.base.BaseApplication;
+import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+import org.xutils.x;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+
+    private List<Medicine> dataList = null;
+    private RecyclerViewAdapter adapter;
+
+    private int sortType = 0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +57,21 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("首页");
 
+        dataList = new ArrayList<>();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.rvContent.setLayoutManager(linearLayoutManager);
+
+        adapter = new RecyclerViewAdapter(MainActivity.this, dataList);
+
+        binding.rvContent.setAdapter(adapter);
+
+        binding.srlContent.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getData();
+            }
+        });
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +100,12 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } if (id == R.id.action_settings) {
+            return true;
+        } if (id == R.id.action_settings) {
+            return true;
+        } if (id == R.id.action_settings) {
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -73,5 +116,22 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void getData() {
+        try {
+            DbManager db = x.getDb(BaseApplication.daoConfig);
+            List<Medicine> medicineList = db.selector(Medicine.class).findAll();
+            if (medicineList != null) {
+                dataList.clear();
+                dataList.addAll(medicineList);
+                adapter.notifyDataSetChanged();
+            }
+
+        } catch (DbException e) {
+            throw new RuntimeException(e);
+        }
+        binding.srlContent.setRefreshing(false);
+
     }
 }

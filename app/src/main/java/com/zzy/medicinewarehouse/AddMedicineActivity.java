@@ -2,11 +2,13 @@ package com.zzy.medicinewarehouse;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,18 +20,19 @@ import com.zzy.medicinewarehouse.base.BaseApplication;
 import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.AddMedicineBinding;
 import com.zzy.medicinewarehouse.utils.DateTimeUtil;
+import com.zzy.medicinewarehouse.utils.UnitUtil;
 
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Date;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class AddMedicineActivity extends AppCompatActivity {
+
+    String[] unitDatas = {"公斤", "斤", "克"};
 
     AddMedicineBinding binding;
 
@@ -76,12 +79,19 @@ public class AddMedicineActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         binding.llThisInventory.setVisibility(View.VISIBLE);
                                         binding.etAbbreviation.setText(bean.getAbbreviation());
-                                        binding.tvThisInventory.setText("当前余量：" + bean.getInventory());
+                                        binding.spnUnit.getSelectedItem().toString();
+                                        inventoryTemp = bean.getInventory();
+
+                                        String inventorStr = getUnitStr(inventoryTemp);
+
+                                        binding.tvThisInventory.setText("当前余量：" + inventorStr);
+
                                         binding.tvInventoryTxt.setText("增加余量：");
                                         binding.etInventory.setText("");
-                                        binding.etAlarmInventory.setText(String.valueOf(bean.getAlarmInventory()));
+
+                                        binding.etAlarmInventory.setText(UnitUtil.getUnitStr(bean.getAlarmInventory(), binding.spnAlarmUnit.getSelectedItemPosition()));
+
                                         idTemp = bean.getId();
-                                        inventoryTemp = bean.getInventory();
                                         binding.butAdd.setText("保存");
                                     }
                                 })
@@ -107,50 +117,114 @@ public class AddMedicineActivity extends AppCompatActivity {
             }
         });
 
+        ArrayAdapter unitAdapter = new ArrayAdapter(AddMedicineActivity.this, android.R.layout.simple_list_item_1, unitDatas);
+        binding.spnUnit.setAdapter(unitAdapter);
 
-        binding.butAdd.setOnClickListener(new View.OnClickListener() {
+        binding.spnUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                try {
-                    String tempTip = "新增成功";
-                    Medicine medicine = new Medicine();
-                    if (idTemp != -1) {
-                        medicine.setId(idTemp);
-                        tempTip = "保存成功";
-                    }
-                    medicine.setName(binding.etName.getText().toString().trim());
-                    medicine.setAbbreviation(binding.etAbbreviation.getText().toString().trim());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String unitStr = getUnitStr(inventoryTemp);
+                binding.tvThisInventory.setText("当前余量：" + unitStr);
+            }
 
-                    medicine.setInventory(inventoryTemp + Integer.parseInt(binding.etInventory.getText().toString().trim()));
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-                    medicine.setAlarmInventory(Integer.parseInt(binding.etAlarmInventory.getText().toString().trim()));
-                    medicine.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
-
-                    DbManager db = x.getDb(BaseApplication.daoConfig);
-                    db.saveOrUpdate(medicine);
-
-                    boolean checked = binding.cbIsContinuous.isChecked();
-                    if (checked) {
-                        binding.etName.setText("");
-                        binding.etAbbreviation.setText("");
-                        binding.etInventory.setText("");
-                        binding.etAlarmInventory.setText("");
-                        binding.llThisInventory.setVisibility(View.GONE);
-                        binding.etName.requestFocus();
-                        binding.tvInventoryTxt.setText("输入余量：");
-                        idTemp = -1;
-                        inventoryTemp = 0;
-
-                    } else {
-                        finish();
-                    }
-                    Toast.makeText(AddMedicineActivity.this, tempTip, Toast.LENGTH_SHORT).show();
-
-                } catch (DbException e) {
-                    throw new RuntimeException(e);
-                }
             }
         });
+
+        binding.spnAlarmUnit.setAdapter(unitAdapter);
+
+        binding.oneGongJin.setOnClickListener(v -> {
+            setInventoryAndAlarm("1");
+        });
+        binding.twoGongJin.setOnClickListener(v -> {
+            setInventoryAndAlarm("2");
+        });
+        binding.fiveGongJin.setOnClickListener(v -> {
+            setInventoryAndAlarm("5");
+        });
+        binding.tenGongJin.setOnClickListener(v -> {
+            setInventoryAndAlarm("10");
+        });
+
+        binding.butAdd.setOnClickListener(v -> {
+            try {
+                String tempTip = "新增成功";
+                Medicine medicine = new Medicine();
+                if (idTemp != -1) {
+                    medicine.setId(idTemp);
+                    tempTip = "保存成功";
+                }
+                medicine.setName(binding.etName.getText().toString().trim());
+                medicine.setAbbreviation(binding.etAbbreviation.getText().toString().trim());
+
+                medicine.setInventory(inventoryTemp + UnitUtil.getNumberOfUnit(
+                        Long.parseLong(
+                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        ), binding.spnUnit.getSelectedItemPosition()
+                ));
+
+                medicine.setAlarmInventory(UnitUtil.getNumberOfUnit(
+                        Long.parseLong(
+                                TextUtils.isEmpty(binding.etAlarmInventory.getText().toString().trim()) ? "0" : binding.etAlarmInventory.getText().toString().trim()
+                        ), binding.spnAlarmUnit.getSelectedItemPosition()
+                ));
+
+                medicine.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
+
+                DbManager db = x.getDb(BaseApplication.daoConfig);
+                db.saveOrUpdate(medicine);
+
+                boolean checked = binding.cbIsContinuous.isChecked();
+                if (checked) {
+                    binding.etName.setText("");
+                    binding.etAbbreviation.setText("");
+//                    binding.etInventory.setText("");
+//                    binding.etAlarmInventory.setText("");
+                    binding.llThisInventory.setVisibility(View.GONE);
+                    binding.etName.requestFocus();
+                    binding.tvInventoryTxt.setText("输入余量：");
+                    idTemp = -1;
+                    inventoryTemp = 0;
+
+                } else {
+                    finish();
+                }
+                Toast.makeText(AddMedicineActivity.this, tempTip, Toast.LENGTH_SHORT).show();
+
+            } catch (DbException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    public void setInventoryAndAlarm(String inventory) {
+        if (binding.etInventory.hasFocus()) {
+            binding.etInventory.setText(inventory);
+            binding.etInventory.setSelection(inventory.length());
+        } else if (binding.etAlarmInventory.hasFocus()) {
+            binding.etAlarmInventory.setText(inventory);
+            binding.etAlarmInventory.setSelection(inventory.length());
+        }
+    }
+
+    public String getUnitStr(int inventory) {
+        DecimalFormat df = new DecimalFormat("0.###");
+        String inventorStr = "";
+        BigDecimal bigDecimal = new BigDecimal(inventory);
+        if (binding.spnUnit.getSelectedItemPosition() == 0) {
+            BigDecimal tempBigDecimal = new BigDecimal("1000");
+            BigDecimal result = bigDecimal.divide(tempBigDecimal, 3, BigDecimal.ROUND_HALF_UP);
+            inventorStr = df.format(result) + "公斤";
+        } else if (binding.spnUnit.getSelectedItemPosition() == 1) {
+            BigDecimal tempBigDecimal = new BigDecimal("500");
+            BigDecimal result = bigDecimal.divide(tempBigDecimal, 3, BigDecimal.ROUND_HALF_UP);
+            inventorStr = df.format(result) + "斤";
+        } else if (binding.spnUnit.getSelectedItemPosition() == 2) {
+            inventorStr = df.format(inventory) + "克";
+        }
+        return inventorStr;
     }
 
     @Override

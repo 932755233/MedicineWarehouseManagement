@@ -10,12 +10,17 @@
     <item
         android:id="@+id/date_sort"
         android:orderInCategory="100"
-        android:title="时间排序"
+        android:title="存量排序"
         app:showAsAction="never" />
     <item
         android:id="@+id/name_sort"
         android:orderInCategory="100"
         android:title="名称排序"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/save_get_list"
+        android:orderInCategory="100"
+        android:title="存取记录"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
