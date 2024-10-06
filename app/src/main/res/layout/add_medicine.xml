@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="药品名称：" />
+
+        <EditText
+            android:id="@+id/et_name"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="药品简写：" />
+
+        <EditText
+            android:id="@+id/et_abbreviation"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress|textCapCharacters" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_thisInventory"
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_thisInventory"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前余量："
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_inventory_txt"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="输入余量：" />
+
+        <EditText
+            android:id="@+id/et_inventory"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="报警余量：" />
+
+        <EditText
+            android:id="@+id/et_alarmInventory"
+            style="@style/AddMedicineTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_isContinuous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="连续新增" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        style="@style/AddMedicineLInearLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/but_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="新增" />
+    </LinearLayout>
+
+</LinearLayout>

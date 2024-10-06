@@ -3,6 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.zzy.medicinewarehouse.MainActivity">
     <item
+        android:id="@+id/normal_sort"
+        android:orderInCategory="100"
+        android:title="默认排序"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/date_sort"
+        android:orderInCategory="100"
+        android:title="时间排序"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/name_sort"
+        android:orderInCategory="100"
+        android:title="名称排序"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
