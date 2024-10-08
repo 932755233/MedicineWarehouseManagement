@@ -33,9 +33,9 @@ import java.text.DecimalFormat;
 
 public class AddMedicineActivity extends AppCompatActivity {
 
-    String[] unitDatas = {"公斤", "斤", "克"};
+    private String[] unitDatas = {"公斤", "斤", "克"};
 
-    AddMedicineBinding binding;
+    private AddMedicineBinding binding;
 
     private int idTemp = -1;
     private int inventoryTemp = 0;
@@ -186,7 +186,7 @@ public class AddMedicineActivity extends AppCompatActivity {
                 AccessRecord accessRecord = new AccessRecord();
                 accessRecord.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
                 accessRecord.setBefore(inventoryTemp);
-                accessRecord.setAdd(UnitUtil.getNumberOfUnit(
+                accessRecord.setVariable(UnitUtil.getNumberOfUnit(
                         Long.parseLong(
                                 TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
                         ), binding.spnUnit.getSelectedItemPosition()));

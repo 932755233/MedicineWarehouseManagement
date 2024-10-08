@@ -14,8 +14,8 @@ public class AccessRecord {
     private String medicineName;
     @Column(name = "before")
     private int before;
-    @Column(name = "add")
-    private int add;
+    @Column(name = "variable")
+    private int variable;
     @Column(name = "after")
     private int after;
     @Column(name = "type")
@@ -55,12 +55,12 @@ public class AccessRecord {
         this.before = before;
     }
 
-    public int getAdd() {
-        return add;
+    public int getVariable() {
+        return variable;
     }
 
-    public void setAdd(int add) {
-        this.add = add;
+    public void setVariable(int variable) {
+        this.variable = variable;
     }
 
     public int getAfter() {
