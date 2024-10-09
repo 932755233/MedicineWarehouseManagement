@@ -1,4 +1,4 @@
-package com.zzy.medicinewarehouse;
+package com.zzy.medicinewarehouse.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,61 +7,53 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zzy.medicinewarehouse.R;
+import com.zzy.medicinewarehouse.RecyclerViewAdapter;
 import com.zzy.medicinewarehouse.bean.Medicine;
+import com.zzy.medicinewarehouse.databinding.ItemMedicinePwBinding;
 import com.zzy.medicinewarehouse.utils.UnitUtil;
 
 import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class MedicineListPopupWindowAdapter extends RecyclerView.Adapter<MedicineListPopupWindowAdapter.ViewHolder> {
 
-    private List<Medicine> dataList;
     private Context context;
+    private List<Medicine> beanList;
 
-
-    public RecyclerViewAdapter(Context context, List<Medicine> dataList) {
+    public MedicineListPopupWindowAdapter(Context context, List<Medicine> beanList) {
         this.context = context;
-        this.dataList = dataList;
+        this.beanList = beanList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_medicine, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_medicine_pw, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Medicine bean = dataList.get(position);
+        Medicine bean = beanList.get(position);
         if (bean != null) {
             holder.tv_name.setText(bean.getName());
-
-            if (bean.getInventory() > bean.getAlarmInventory()) {
-                holder.tv_inventory.setTextColor(ContextCompat.getColor(context, android.R.color.holo_green_dark));
-            } else {
-                holder.tv_inventory.setTextColor(ContextCompat.getColor(context, android.R.color.holo_red_light));
-            }
-
-            holder.tv_inventory.setText(UnitUtil.getUnitStr(bean.getInventory(), 0) + "公斤");
-
             holder.tv_abbreviation.setText(bean.getAbbreviation());
-            holder.tv_alarmInventory.setText("提醒:" + UnitUtil.getUnitStr(bean.getAlarmInventory(), 0) + "公斤");
-
-            holder.itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(position);
-                }
-            });
+            holder.tv_inventory.setText(UnitUtil.getUnitStr(bean.getInventory(), 0) + "公斤");
+            holder.itemView.setOnClickListener(v -> listener.onItemClick(position));
         }
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return beanList.size();
+    }
+
+    public void notifyDataSetChanged(List<Medicine> beanList) {
+        this.beanList = beanList;
+        notifyDataSetChanged();
     }
 
     private OnItemClickListener listener;
@@ -78,18 +70,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView tv_name;
-        TextView tv_inventory;
-        TextView tv_abbreviation;
-        TextView tv_alarmInventory;
+        private TextView tv_name;
+        private TextView tv_abbreviation;
+        private TextView tv_inventory;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tv_name = itemView.findViewById(R.id.tv_name);
-            tv_inventory = itemView.findViewById(R.id.tv_inventory);
             tv_abbreviation = itemView.findViewById(R.id.tv_abbreviation);
-            tv_alarmInventory = itemView.findViewById(R.id.tv_alarmInventory);
+            tv_inventory = itemView.findViewById(R.id.tv_inventory);
         }
     }
 }

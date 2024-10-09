@@ -25,6 +25,13 @@ public class Medicine {
     @Column(name = "createDate")
     private String createDate;
 
+    public Medicine() {
+    }
+
+    public Medicine(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

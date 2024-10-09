@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:layout_margin="5dp"
     android:padding="10dp">
 
     <LinearLayout
@@ -58,9 +60,9 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#8C8989" />
+<!--    <View-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0.5dp"-->
+<!--        android:background="#8C8989" />-->
 </LinearLayout>

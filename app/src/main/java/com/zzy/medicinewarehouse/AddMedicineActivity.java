@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zzy.medicinewarehouse.base.BaseApplication;
+import com.zzy.medicinewarehouse.base.Constants;
 import com.zzy.medicinewarehouse.bean.AccessRecord;
 import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.AddMedicineBinding;
@@ -33,7 +34,6 @@ import java.text.DecimalFormat;
 
 public class AddMedicineActivity extends AppCompatActivity {
 
-    private String[] unitDatas = {"公斤", "斤", "克"};
 
     private AddMedicineBinding binding;
 
@@ -51,6 +51,7 @@ public class AddMedicineActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+
         getSupportActionBar().setTitle("新增");
 
         binding.etName.addTextChangedListener(new TextWatcher() {
@@ -118,7 +119,7 @@ public class AddMedicineActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter unitAdapter = new ArrayAdapter(AddMedicineActivity.this, android.R.layout.simple_list_item_1, unitDatas);
+        ArrayAdapter unitAdapter = new ArrayAdapter(AddMedicineActivity.this, android.R.layout.simple_list_item_1, Constants.unitDatas);
         binding.spnUnit.setAdapter(unitAdapter);
 
         binding.spnUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -160,19 +161,29 @@ public class AddMedicineActivity extends AppCompatActivity {
                 } else {
                     medicine.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
                 }
-                medicine.setName(binding.etName.getText().toString().trim());
-                medicine.setAbbreviation(binding.etAbbreviation.getText().toString().trim());
+
+                String name = binding.etName.getText().toString().trim();
+                if (TextUtils.isEmpty(name)) {
+                    Toast.makeText(this, "药品名称不能为空！！！", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                medicine.setName(name);
+
+                String abbreviation = binding.etAbbreviation.getText().toString().trim();
+                if (TextUtils.isEmpty(abbreviation)) {
+                    Toast.makeText(this, "药品简写不能为空！！！", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                medicine.setAbbreviation(abbreviation);
 
                 medicine.setInventory(inventoryTemp + UnitUtil.getNumberOfUnit(
-                        Long.parseLong(
-                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
-                        ), binding.spnUnit.getSelectedItemPosition()
+                        TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        , binding.spnUnit.getSelectedItemPosition()
                 ));
 
                 medicine.setAlarmInventory(UnitUtil.getNumberOfUnit(
-                        Long.parseLong(
-                                TextUtils.isEmpty(binding.etAlarmInventory.getText().toString().trim()) ? "0" : binding.etAlarmInventory.getText().toString().trim()
-                        ), binding.spnAlarmUnit.getSelectedItemPosition()
+                        TextUtils.isEmpty(binding.etAlarmInventory.getText().toString().trim()) ? "0" : binding.etAlarmInventory.getText().toString().trim()
+                        , binding.spnAlarmUnit.getSelectedItemPosition()
                 ));
 
 
@@ -187,13 +198,11 @@ public class AddMedicineActivity extends AppCompatActivity {
                 accessRecord.setCreateDate(DateTimeUtil.getyyyyMMddHHmmss());
                 accessRecord.setBefore(inventoryTemp);
                 accessRecord.setVariable(UnitUtil.getNumberOfUnit(
-                        Long.parseLong(
-                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
-                        ), binding.spnUnit.getSelectedItemPosition()));
+                        TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        , binding.spnUnit.getSelectedItemPosition()));
                 accessRecord.setAfter(inventoryTemp + UnitUtil.getNumberOfUnit(
-                        Long.parseLong(
-                                TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
-                        ), binding.spnUnit.getSelectedItemPosition()
+                        TextUtils.isEmpty(binding.etInventory.getText().toString().trim()) ? "0" : binding.etInventory.getText().toString().trim()
+                        , binding.spnUnit.getSelectedItemPosition()
                 ));
                 accessRecord.setMedicineName(medicine.getName());
                 accessRecord.setMedicineId(medicine.getId());
@@ -209,7 +218,7 @@ public class AddMedicineActivity extends AppCompatActivity {
 //                    binding.etAlarmInventory.setText("");
                     binding.llThisInventory.setVisibility(View.GONE);
                     binding.etName.requestFocus();
-                    binding.tvInventoryTxt.setText("输入余量：");
+                    binding.tvInventoryTxt.setText("输入数量：");
                     idTemp = -1;
                     inventoryTemp = 0;
 

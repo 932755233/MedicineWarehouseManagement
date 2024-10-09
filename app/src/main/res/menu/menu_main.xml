@@ -11,12 +11,12 @@
         android:id="@+id/date_sort"
         android:orderInCategory="100"
         android:title="存量排序"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/name_sort"
         android:orderInCategory="100"
         android:title="名称排序"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/save_get_list"
         android:orderInCategory="100"

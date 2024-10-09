@@ -26,7 +26,8 @@ public class UnitUtil {
         return inventorStr;
     }
 
-    public static int getNumberOfUnit(long number, int type) {
+    public static int getNumberOfUnit(String number, int type) {
+        number = TextUtils.isEmpty(number) ? "0" : number;
         BigDecimal bigDecimal = new BigDecimal(number);
         int resultInt = 0;
         if (type == 0) {

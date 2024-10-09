@@ -7,6 +7,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private int sortType = 0;
     private boolean isDesc = false;
 
+    private String searchStr = "";
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -64,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
         binding.rvContent.setLayoutManager(linearLayoutManager);
 
         adapter = new RecyclerViewAdapter(MainActivity.this, dataList);
+        adapter.setOnItemClickListener(position -> {
+            Intent intent = new Intent(MainActivity.this, OutInActivity.class);
+            intent.putExtra("ID", dataList.get(position).getId());
+            startActivity(intent);
+        });
 
         binding.rvContent.setAdapter(adapter);
 
@@ -80,6 +90,26 @@ public class MainActivity extends AppCompatActivity {
 //                        .setAnchorView(R.id.fab)
 //                        .setAction("Action", null).show();
                 startActivity(new Intent(MainActivity.this, AddMedicineActivity.class));
+            }
+        });
+
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchStr = s.toString();
+                binding.srlContent.setRefreshing(true);
+//                binding.srlContent.canChildScrollUp();
+                getData();
             }
         });
     }
@@ -134,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, SettingActivity.class));
             return true;
         }
 
@@ -151,14 +182,16 @@ public class MainActivity extends AppCompatActivity {
                 selector.orderBy("inventory", isDesc);
             if (sortType == 2)
                 selector.orderBy("abbreviation", isDesc);
+            if (!TextUtils.isEmpty(searchStr)) {
+                selector.where("name", "like", "%" + searchStr + "%").or("abbreviation", "like", "%" + searchStr + "%");
+            }
 
             List<Medicine> medicineList = selector.findAll();
-
+            dataList.clear();
             if (medicineList != null) {
-                dataList.clear();
                 dataList.addAll(medicineList);
-                adapter.notifyDataSetChanged();
             }
+            adapter.notifyDataSetChanged();
 
         } catch (DbException e) {
             throw new RuntimeException(e);
