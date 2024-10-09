@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
-        getSupportActionBar().setTitle("首页");
+        getSupportActionBar().setTitle("列表");
 
         dataList = new ArrayList<>();
 
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             if (sortType == 2) {
                 setRightSuoYin();
                 binding.rulerWidget.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.rulerWidget.setVisibility(View.GONE);
             }
 
