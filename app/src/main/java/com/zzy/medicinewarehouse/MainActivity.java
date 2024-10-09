@@ -22,17 +22,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.zzy.medicinewarehouse.base.BaseApplication;
 import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.ActivityMainBinding;
+import com.zzy.medicinewarehouse.view.RulerWidget;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.xutils.DbManager;
+import org.xutils.common.util.LogUtil;
 import org.xutils.db.Selector;
+import org.xutils.db.annotation.Column;
+import org.xutils.db.converter.ColumnConverter;
+import org.xutils.db.sqlite.ColumnDbType;
+import org.xutils.db.sqlite.WhereBuilder;
+import org.xutils.db.table.ColumnUtils;
 import org.xutils.ex.DbException;
 import org.xutils.x;
 
+import java.sql.SQLData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -176,12 +187,15 @@ public class MainActivity extends AppCompatActivity {
             DbManager db = x.getDb(BaseApplication.daoConfig);
 
             Selector<Medicine> selector = db.selector(Medicine.class);
-            if (sortType == 0)
-                selector.orderBy("id", isDesc);
+            if (sortType == 0) {
+                selector.orderBy("abbreviation");
+//                selector.select("inventory", " <= ", "alarmInventory");
+                selector.expr("inventory <= alarmInventory");
+            }
             if (sortType == 1)
                 selector.orderBy("inventory", isDesc);
             if (sortType == 2)
-                selector.orderBy("abbreviation", isDesc);
+                selector.orderBy("abbreviation");
             if (!TextUtils.isEmpty(searchStr)) {
                 selector.where("name", "like", "%" + searchStr + "%").or("abbreviation", "like", "%" + searchStr + "%");
             }
@@ -192,6 +206,17 @@ public class MainActivity extends AppCompatActivity {
                 dataList.addAll(medicineList);
             }
             adapter.notifyDataSetChanged();
+            if (sortType == 2) {
+                setRightSuoYin();
+                binding.rulerWidget.setVisibility(View.VISIBLE);
+            }else{
+                binding.rulerWidget.setVisibility(View.GONE);
+            }
+
+            if (dataList.isEmpty() && sortType == 0) {
+                sortType = 2;
+                getData();
+            }
 
         } catch (DbException e) {
             throw new RuntimeException(e);
@@ -199,4 +224,31 @@ public class MainActivity extends AppCompatActivity {
         binding.srlContent.setRefreshing(false);
 
     }
+
+    public void setRightSuoYin() {
+        Map<String, Integer> selector = new HashMap<>();
+        List<String> rules = new ArrayList<>();
+
+        String tempStr = "";
+        for (int i = 0; i < dataList.size(); i++) {
+            Medicine bean = dataList.get(i);
+            String firstWord = bean.getAbbreviation().substring(0, 1);
+            if (!selector.containsKey(firstWord)) {
+                selector.put(firstWord, i);
+                rules.add(firstWord);
+            }
+        }
+
+        binding.rulerWidget.setData(rules.toArray(new String[0]));
+        binding.rulerWidget.invalidate();
+        binding.rulerWidget.setOnTouchingLetterChangedListener(new RulerWidget.OnTouchingLetterChangedListener() {
+            @Override
+            public void onTouchingLetterChanged(String s) {
+                Integer i = selector.get(s);
+                binding.rvContent.scrollToPosition(i);
+            }
+        });
+    }
+
+
 }

@@ -5,7 +5,7 @@
     <item
         android:id="@+id/normal_sort"
         android:orderInCategory="100"
-        android:title="默认排序"
+        android:title="只显示需要提醒"
         app:showAsAction="never" />
     <item
         android:id="@+id/date_sort"

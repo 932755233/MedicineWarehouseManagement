@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true">
-        <shape>
-
-            <solid android:color="@color/white" />
-            <corners android:bottomLeftRadius="8dp" android:bottomRightRadius="0dp" android:topLeftRadius="8dp" android:topRightRadius="0dp" />
-            <stroke android:width="2dp" android:color="@android:color/holo_red_dark" />
-        </shape>
+        <layer-list>
+            <item android:left="-2dp" android:top="-2dp">
+                <shape>
+                    <!--                    <solid android:color="@color/white" />-->
+                    <!--                    <corners android:bottomLeftRadius="8dp" android:bottomRightRadius="0dp" android:topLeftRadius="8dp" android:topRightRadius="0dp" />-->
+                    <stroke android:width="1dp" android:color="?attr/colorPrimary" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
     <item android:state_checked="false">
-        <shape>
-
-            <solid android:color="@color/white" />
-            <corners android:bottomLeftRadius="8dp" android:bottomRightRadius="0dp" android:topLeftRadius="8dp" android:topRightRadius="0dp" />
-            <stroke android:width="2dp" android:color="@android:color/darker_gray" />
-        </shape>
+        <layer-list>
+            <item android:left="-2dp" android:right="-2dp" android:top="-2dp">
+                <shape android:shape="rectangle">
+                    <!--                    <size android:height="2dp" />-->
+                    <!--            <solid android:color="#00000000" />-->
+                    <!--                    <solid android:color="@color/white" />-->
+                    <!--                    <corners android:bottomLeftRadius="8dp" android:bottomRightRadius="0dp" android:topLeftRadius="8dp" android:topRightRadius="0dp" />-->
+                    <stroke android:width="1dp" android:color="@android:color/darker_gray" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
 </selector>
 

@@ -39,12 +39,14 @@
 
         <RadioButton
             android:id="@+id/rb_out"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_left_out"
             android:button="@null"
             android:paddingLeft="30dp"
             android:paddingRight="10dp"
+            android:gravity="right"
             android:paddingBottom="2dp"
             android:text="取出"
             android:textColor="@drawable/txtcolor_left_out"
@@ -52,8 +54,9 @@
 
         <RadioButton
             android:id="@+id/rb_in"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_right_out"
             android:button="@null"
             android:paddingLeft="10dp"
