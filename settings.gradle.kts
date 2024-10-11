@@ -16,6 +16,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        // JitPack 远程仓库：https://jitpack.io
+        maven(url = "https://jitpack.io")
     }
 }
 

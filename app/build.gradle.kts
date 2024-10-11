@@ -47,5 +47,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation("org.xutils:xutils:3.8.12")
+    implementation("org.apache.poi:poi:4.1.2")
+    implementation("org.apache.poi:poi-ooxml:4.1.2")
+    implementation("com.github.getActivity:XXPermissions:20.0")
 
 }
