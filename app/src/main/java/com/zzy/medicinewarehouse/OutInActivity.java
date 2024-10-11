@@ -1,5 +1,6 @@
 package com.zzy.medicinewarehouse;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zzy.medicinewarehouse.base.BaseApplication;
@@ -92,6 +94,40 @@ public class OutInActivity extends AppCompatActivity {
 
         binding.tvAdd.setOnClickListener(v -> {
             startActivity(new Intent(this, AddMedicineActivity.class));
+        });
+
+        binding.tvDelete.setOnClickListener(v -> {
+
+            if (bean == null || bean.getId() == 0) {
+                Toast.makeText(OutInActivity.this, "请检查是否已选择药品!", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this)
+//                                .setIcon(R.drawable.ic_launcher_background)
+                    .setTitle("警告")
+                    .setMessage("是否要删除：" + bean.getName() + "？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                DbManager db = x.getDb(BaseApplication.daoConfig);
+                                db.deleteById(Medicine.class, bean.getId());
+                                finish();
+                                Toast.makeText(OutInActivity.this, "删除完成!", Toast.LENGTH_LONG).show();
+                            } catch (DbException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         ArrayAdapter unitAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, Constants.unitDatas);
