@@ -185,6 +185,7 @@ public class SettingActivity extends AppCompatActivity {
                                     try {
                                         File file = new File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), "樊氏堂.xlsx");
                                         LogUtil.i("zzy---" + file.getAbsolutePath());
+                                        binding.tvPath.setText("Excel文件保存路径：" + file.getAbsolutePath());
                                         FileOutputStream out = new FileOutputStream(file);
                                         workbook.write(out);
                                         out.close();
