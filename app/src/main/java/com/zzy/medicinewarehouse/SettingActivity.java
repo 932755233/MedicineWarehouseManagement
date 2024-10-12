@@ -26,6 +26,7 @@ import com.zzy.medicinewarehouse.base.Constants;
 import com.zzy.medicinewarehouse.bean.AccessRecord;
 import com.zzy.medicinewarehouse.bean.Medicine;
 import com.zzy.medicinewarehouse.databinding.LayoutSettingBinding;
+import com.zzy.medicinewarehouse.utils.DateTimeUtil;
 import com.zzy.medicinewarehouse.utils.UnitUtil;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -183,7 +184,15 @@ public class SettingActivity extends AppCompatActivity {
                             public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
                                 if (allGranted) {
                                     try {
-                                        File file = new File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), "樊氏堂.xlsx");
+
+
+                                        File file = new File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), "樊/樊氏堂" + DateTimeUtil.getyyyyMMddHHmmss() + ".xlsx");
+
+                                        File parentFile = file.getParentFile();
+                                        if (!parentFile.exists()) {
+                                            parentFile.mkdirs();
+                                        }
+
                                         LogUtil.i("zzy---" + file.getAbsolutePath());
                                         binding.tvPath.setText("Excel文件保存路径：" + file.getAbsolutePath());
                                         FileOutputStream out = new FileOutputStream(file);
