@@ -1,11 +1,16 @@
 package com.zzy.medicinewarehouse;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
+import static android.os.Environment.DIRECTORY_MOVIES;
 import static android.os.Environment.getExternalStoragePublicDirectory;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -175,18 +180,26 @@ public class SettingActivity extends AppCompatActivity {
                     rowTemp.createCell(6).setCellValue(UnitUtil.getUnitStr(bean.getAfter(), 0));
                     rowTemp.createCell(7).setCellValue(bean.getCreateDate());
                 }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                    if (Environment.isExternalStorageManager()) {
+//                        // 已有权限
+//                    } else {
+//                        Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+//                        startActivity(intent);
+//                    }
+//                }
 
-
-                XXPermissions.with(this)
-                        .permission(Permission.WRITE_EXTERNAL_STORAGE)
-                        .request(new OnPermissionCallback() {
-                            @Override
-                            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
-                                if (allGranted) {
+//                XXPermissions.with(this)
+//                        .permission(new String[]{ Permission.WRITE_EXTERNAL_STORAGE})
+//                        .request(new OnPermissionCallback() {
+//                            @Override
+//                            public void onGranted(@NonNull List<String> permissions, boolean allGranted) {
+//                                if (allGranted) {
                                     try {
 
 
-                                        File file = new File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), "樊/樊氏堂" + DateTimeUtil.getyyyyMMddHHmmss() + ".xlsx");
+                                        File file = new File(getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS), "樊/樊氏堂_" + DateTimeUtil.getyyyyMMddHHmmssNoSpace() + ".xlsx");
+//                                        File file = new File(getExternalStoragePublicDirectory(DIRECTORY_MOVIES), "樊/樊氏堂_" + DateTimeUtil.getyyyyMMddHHmmssNoSpace() + ".xlsx");
 
                                         File parentFile = file.getParentFile();
                                         if (!parentFile.exists()) {
@@ -202,12 +215,12 @@ public class SettingActivity extends AppCompatActivity {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                } else {
-                                    Toast.makeText(SettingActivity.this, "必须要权限", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-
+//                                } else {
+//                                    Toast.makeText(SettingActivity.this, "必须要权限", Toast.LENGTH_LONG).show();
+//                                }
+//                            }
+//                        });
+//
             } catch (DbException e) {
                 throw new RuntimeException(e);
             }
