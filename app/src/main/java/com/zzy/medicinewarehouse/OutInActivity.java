@@ -160,6 +160,18 @@ public class OutInActivity extends AppCompatActivity {
         binding.tenGongJin.setOnClickListener(v -> {
             setInventoryAndAlarm("10");
         });
+        binding.oneGongJinFu.setOnClickListener(v -> {
+            setInventoryAndAlarm("-1");
+        });
+        binding.twoGongJinFu.setOnClickListener(v -> {
+            setInventoryAndAlarm("-2");
+        });
+        binding.fiveGongJinFu.setOnClickListener(v -> {
+            setInventoryAndAlarm("-5");
+        });
+        binding.tenGongJinFu.setOnClickListener(v -> {
+            setInventoryAndAlarm("-10");
+        });
 
         binding.butSave.setOnClickListener(v -> {
             if (bean.getId() == 0) {

@@ -163,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal|numberSigned" />
 
         <Spinner
             android:id="@+id/spn_unit"
@@ -244,6 +244,72 @@
             android:orientation="horizontal"
 
             app:constraint_referenced_ids="oneGongJin,twoGongJin,fiveGongJin,tenGongJin"
+
+            app:flow_horizontalBias="0"
+
+            app:flow_horizontalGap="10dp"
+
+            app:flow_horizontalStyle="packed"
+
+            app:flow_verticalGap="0dp"
+
+            app:flow_wrapMode="aligned"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/oneGongJinFu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-1"
+            android:textSize="12sp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/twoGongJinFu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-2"
+            android:textSize="12sp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/fiveGongJinFu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-5"
+            android:textSize="12sp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/tenGongJinFu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-10"
+            android:textSize="12sp" />
+
+        <androidx.constraintlayout.helper.widget.Flow
+
+            android:id="@+id/flowFu"
+
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="10dp"
+
+            android:orientation="horizontal"
+
+            app:constraint_referenced_ids="oneGongJinFu,twoGongJinFu,fiveGongJinFu,tenGongJinFu"
 
             app:flow_horizontalBias="0"
 
